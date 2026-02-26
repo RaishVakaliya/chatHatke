@@ -10,10 +10,9 @@ export const createUser = mutation({
     imageUrl: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    // Check if user already exists
     const existingUser = await ctx.db
       .query("users")
-      .withIndex("by_clerk_id", (q) => q.eq("clerkId", args.clerkId))
+      .withIndex("by_clerkId", (q) => q.eq("clerkId", args.clerkId))
       .first();
 
     if (existingUser) {
@@ -39,7 +38,7 @@ export async function getCurrentUser(ctx: QueryCtx | MutationCtx) {
 
   const currentUser = await ctx.db
     .query("users")
-    .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
+    .withIndex("by_clerkId", (q) => q.eq("clerkId", identity.subject))
     .first();
 
   if (!currentUser) throw new Error("User not found");
@@ -52,7 +51,7 @@ export const getUserByClerkId = query({
   handler: async (ctx, { clerkId }) => {
     const user = await ctx.db
       .query("users")
-      .withIndex("by_clerk_id", (q) => q.eq("clerkId", clerkId))
+      .withIndex("by_clerkId", (q) => q.eq("clerkId", clerkId))
       .first();
 
     return user;
@@ -68,6 +67,21 @@ export const listOtherUsers = query({
     }
 
     const all = await ctx.db.query("users").collect();
-    return all.filter((u) => u.clerkId !== identity.subject);
+    const now = Date.now();
+    
+    return all
+      .filter((u) => u.clerkId !== identity.subject)
+      .map((u) => ({
+        ...u,
+        isOnline: u.lastSeen ? now - u.lastSeen < 60000 : false,
+      }));
+  },
+});
+
+export const updatePresence = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const user = await getCurrentUser(ctx);
+    await ctx.db.patch(user._id, { lastSeen: Date.now() });
   },
 });

@@ -46,14 +46,17 @@ export const listMychats = query({
 
     const mine = all.filter((c) => c.participantIds.includes(me._id));
 
-    // Hydrate with the other user's info
+    const now = Date.now();
     const result = await Promise.all(
       mine.map(async (conv) => {
         const otherId = conv.participantIds.find((id) => id !== me._id)!;
         const other = await ctx.db.get(otherId);
         return {
           ...conv,
-          otherUser: other,
+          otherUser: other ? {
+            ...other,
+            isOnline: other.lastSeen ? now - other.lastSeen < 60000 : false,
+          } : null,
         };
       })
     );
