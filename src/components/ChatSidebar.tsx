@@ -9,7 +9,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import UserPicker from "./UserPicker";
-import Image from "next/image";
+import UserAvatar from "./UserAvatar";
 
 interface ChatItem {
   _id: Id<"chats">;
@@ -21,6 +21,7 @@ interface ChatItem {
     username?: string;
     email?: string;
     imageUrl?: string;
+    isOnline?: boolean;
   } | null;
 }
 
@@ -136,12 +137,6 @@ export default function ChatSidebar({
             conv.otherUser?.username ??
             conv.otherUser?.email ??
             "Unknown";
-          const initials = name
-            .split(" ")
-            .map((n) => n[0])
-            .join("")
-            .slice(0, 2)
-            .toUpperCase();
           const isActive = conv._id === activeConvId;
 
           return (
@@ -152,20 +147,7 @@ export default function ChatSidebar({
                 isActive ? "bg-(--active-chat)" : "hover:bg-(--active-chat)/60"
               }`}
             >
-              {/* Avatar */}
-              <div className="w-10 h-10 rounded-full overflow-hidden bg-zinc-700 flex items-center justify-center text-xs font-semibold text-white shrink-0">
-                {conv.otherUser?.imageUrl ? (
-                  <Image
-                    src={conv.otherUser.imageUrl}
-                    alt={name}
-                    width={40}
-                    height={40}
-                    className="object-cover w-full h-full"
-                  />
-                ) : (
-                  <span>{initials}</span>
-                )}
-              </div>
+              <UserAvatar user={conv.otherUser} size="md" showOnline />
 
               {/* Info */}
               <div className="flex-1 min-w-0">

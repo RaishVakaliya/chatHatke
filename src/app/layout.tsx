@@ -19,6 +19,8 @@ export const metadata: Metadata = {
   description: "Connect with anyone, anywhere",
 };
 
+import PresenceTracker from "@/components/PresenceTracker";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -35,7 +37,10 @@ export default function RootLayout({
           signInFallbackRedirectUrl="/chat"
           signUpFallbackRedirectUrl="/chat"
         >
-          <ConvexClientProvider>{children}</ConvexClientProvider>
+          <ConvexClientProvider>
+            <PresenceTracker />
+            {children}
+          </ConvexClientProvider>
         </ClerkProvider>
       </body>
     </html>

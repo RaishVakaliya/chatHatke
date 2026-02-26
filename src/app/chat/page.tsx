@@ -30,6 +30,18 @@ export default function ChatPage() {
     }
   }, [isLoaded, isSignedIn, router]);
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setActiveConvId(null);
+        setShowChat(false);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
   const handleSelectChat = (id: Id<"chats">) => {
     setActiveConvId(id);
     setShowChat(true);
