@@ -24,4 +24,10 @@ export default defineSchema({
     body: v.string(),
     createdAt: v.number(),
   }).index("by_chat", ["chatId", "createdAt"]),
+
+  typing: defineTable({
+    chatId: v.id("chats"),
+    userId: v.id("users"),
+    updatedAt: v.number(),
+  }).index("by_chat", ["chatId"]),
 });

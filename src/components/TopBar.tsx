@@ -1,12 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Bell, Sun, Moon, HelpCircle, Search, LogOut } from "lucide-react";
+import { Bell, Sun, Moon, HelpCircle, LogOut } from "lucide-react";
 import { useUser, useClerk } from "@clerk/nextjs";
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import Image from "next/image";
-import { Button } from "./ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -35,22 +34,12 @@ export default function TopBar() {
 
   return (
     <div
-      className="flex items-center justify-between px-4 py-2.5 shrink-0 relative"
+      className="flex items-center justify-end px-4 py-2.5 shrink-0 relative"
       style={{
         borderBottom: "1px solid var(--border)",
         background: "var(--bg-primary)",
       }}
     >
-      {/* left: search */}
-      <div
-        className="flex items-center gap-2 px-3 py-1.5 rounded-lg w-48"
-        style={{ background: "var(--active-chat)" }}
-      >
-        <Search className="w-3.5 h-3.5 text-[var(--text-secondary)]" />
-        <span className="text-sm text-[var(--text-secondary)]">Search...</span>
-      </div>
-
-      {/* right: icons + profile */}
       <div className="flex items-center gap-1">
         <div className="relative">
           <button className="relative w-8 h-8 flex items-center justify-center rounded-full text-[var(--text-secondary)] hover:bg-[var(--active-chat)] transition-colors">
@@ -120,7 +109,7 @@ export default function TopBar() {
             </div>
 
             <DropdownMenuItem
-              className="flex items-center gap-2 px-3 py-2 text-zinc-300 cursor-pointer focus:bg-zinc-800 data-[highlighted]:bg-zinc-800 rounded-none"
+              className="flex items-center justify-center gap-2 px-3 py-2 text-zinc-300 cursor-pointer focus:bg-zinc-800 data-[highlighted]:bg-zinc-800 rounded-none"
               onClick={() => signOut({ redirectUrl: "/" })}
             >
               <LogOut className="w-4 h-4" />

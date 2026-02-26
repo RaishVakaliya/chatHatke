@@ -5,6 +5,7 @@ import { useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { Id } from "../../convex/_generated/dataModel";
 import { Smile, Paperclip, Send } from "lucide-react";
+import { useTyping } from "@/hooks/useTyping";
 
 interface ChatInputProps {
   chatId: Id<"chats">;
@@ -14,12 +15,14 @@ export default function ChatInput({ chatId }: ChatInputProps) {
   const [value, setValue] = useState("");
   const [sending, setSending] = useState(false);
   const sendMessage = useMutation(api.chats.sendMessage);
+  const { startTyping, stopTyping } = useTyping(chatId);
 
   const handleSend = async () => {
     const trimmed = value.trim();
     if (!trimmed || sending) return;
     setSending(true);
     setValue("");
+    stopTyping();
     try {
       await sendMessage({ chatId, body: trimmed });
     } catch (err) {
@@ -30,7 +33,7 @@ export default function ChatInput({ chatId }: ChatInputProps) {
     }
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
+  const handleEnterPress = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSend();
@@ -53,8 +56,15 @@ export default function ChatInput({ chatId }: ChatInputProps) {
           type="text"
           placeholder="Enter message..."
           value={value}
-          onChange={(e) => setValue(e.target.value)}
-          onKeyDown={handleKeyDown}
+          onChange={(e) => {
+            setValue(e.target.value);
+            if (e.target.value) {
+              startTyping();
+            } else {
+              stopTyping();
+            }
+          }}
+          onKeyDown={handleEnterPress}
           disabled={sending}
           className="flex-1 bg-transparent text-sm text-(--text-primary) placeholder:text-(--text-secondary) outline-none"
         />
@@ -70,8 +80,12 @@ export default function ChatInput({ chatId }: ChatInputProps) {
             disabled={!value.trim() || sending}
             className="ml-1 w-8 h-8 rounded-xl flex items-center justify-center transition-all disabled:opacity-40"
             style={{
-              background: value.trim() ? "var(--text-primary)" : "var(--active-chat)",
-              color: value.trim() ? "var(--bg-primary)" : "var(--text-secondary)",
+              background: value.trim()
+                ? "var(--text-primary)"
+                : "var(--active-chat)",
+              color: value.trim()
+                ? "var(--bg-primary)"
+                : "var(--text-secondary)",
             }}
           >
             <Send className="w-3.5 h-3.5" />

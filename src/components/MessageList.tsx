@@ -4,6 +4,7 @@ import { api } from "../../convex/_generated/api";
 import { Id } from "../../convex/_generated/dataModel";
 import MessageBubble from "./MessageBubble";
 import { ArrowDown } from "lucide-react";
+import TypingIndicator from "./TypingIndicator";
 
 interface MessageListProps {
   chatId: Id<"chats">;
@@ -138,6 +139,7 @@ export default function MessageList({ chatId }: MessageListProps) {
           },
         )}
 
+        <TypingIndicator chatId={chatId} />
         <div ref={bottomRef} className="h-2" />
       </div>
 
