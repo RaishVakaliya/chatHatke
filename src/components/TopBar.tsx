@@ -1,8 +1,10 @@
 "use client";
 
-import { Bell, Sun, Moon, HelpCircle, Search, LogOut } from "lucide-react";
 import { useState, useEffect } from "react";
+import { Bell, Sun, Moon, HelpCircle, Search, LogOut } from "lucide-react";
 import { useUser, useClerk } from "@clerk/nextjs";
+import { useQuery } from "convex/react";
+import { api } from "../../convex/_generated/api";
 import Image from "next/image";
 import { Button } from "./ui/button";
 import {
@@ -29,6 +31,7 @@ export default function TopBar() {
     user?.firstName && user?.lastName
       ? `${user.firstName[0]}${user.lastName[0]}`.toUpperCase()
       : (user?.firstName?.[0]?.toUpperCase() ?? "U");
+  const unreadChatsCount = useQuery(api.chats.getUnreadCounts) ?? 0;
 
   return (
     <div
@@ -49,10 +52,17 @@ export default function TopBar() {
 
       {/* right: icons + profile */}
       <div className="flex items-center gap-1">
-        <button className="relative w-8 h-8 flex items-center justify-center rounded-full text-[var(--text-secondary)] hover:bg-[var(--active-chat)] transition-colors">
-          <Bell className="w-4 h-4" />
-          <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-red-500" />
-        </button>
+        <div className="relative">
+          <button className="relative w-8 h-8 flex items-center justify-center rounded-full text-[var(--text-secondary)] hover:bg-[var(--active-chat)] transition-colors">
+            <Bell className="w-5 h-5" />
+
+            {unreadChatsCount > 0 && (
+              <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 bg-green-700 text-white text-[10px] font-bold flex items-center justify-center rounded-full border-2 border-[var(--bg-primary)]">
+                {unreadChatsCount}
+              </span>
+            )}
+          </button>
+        </div>
         <button
           onClick={() => setDark(!dark)}
           className="w-8 h-8 flex items-center justify-center rounded-full text-[var(--text-secondary)] hover:bg-[var(--active-chat)] transition-colors"
@@ -63,7 +73,7 @@ export default function TopBar() {
           <HelpCircle className="w-4 h-4" />
         </button>
 
-        {/* profile avatar + dropdown (shadcn DropdownMenu) */}
+        {/* profile avatar */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button className="w-8 h-8 rounded-full overflow-hidden flex items-center justify-center bg-zinc-700 text-xs font-semibold text-white shrink-0 ml-1">

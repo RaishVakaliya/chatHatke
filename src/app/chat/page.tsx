@@ -22,7 +22,16 @@ export default function ChatPage() {
   const chats = useQuery(api.chats.listMychats, {});
   const getOrCreate = useMutation(api.chats.getOrCreatechat);
 
+  const markAsRead = useMutation(api.chats.markAsRead);
+
   const activeConv = chats?.find((c) => c._id === activeConvId) ?? null;
+
+  useEffect(() => {
+    if (activeConvId) {
+      markAsRead({ chatId: activeConvId });
+    }
+    // Re-run if chats change (new message)
+  }, [activeConvId, markAsRead, chats]);
 
   useEffect(() => {
     if (isLoaded && !isSignedIn) {

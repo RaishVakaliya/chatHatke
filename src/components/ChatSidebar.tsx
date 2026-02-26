@@ -15,6 +15,7 @@ interface ChatItem {
   _id: Id<"chats">;
   lastMessageBody?: string;
   lastMessageTime?: number;
+  unreadCount?: number;
   otherUser: {
     _id: Id<"users">;
     fullName?: string;
@@ -138,6 +139,7 @@ export default function ChatSidebar({
             conv.otherUser?.email ??
             "Unknown";
           const isActive = conv._id === activeConvId;
+          const showCount = !isActive && (conv.unreadCount ?? 0) > 0;
 
           return (
             <button
@@ -155,12 +157,19 @@ export default function ChatSidebar({
                   <span className="text-sm font-semibold text-(--text-primary) truncate">
                     {name}
                   </span>
-                  <span className="text-[11px] text-(--text-secondary) shrink-0 whitespace-nowrap">
+                  <span className={`text-[11px] shrink-0 whitespace-nowrap ${showCount ? "text-green-500 font-bold" : "text-(--text-secondary)"}`}>
                     {formatTime(conv.lastMessageTime)}
                   </span>
                 </div>
-                <div className="text-xs text-(--text-secondary) truncate">
-                  {conv.lastMessageBody ?? "Start a chat…"}
+                <div className="flex items-center justify-between gap-2">
+                  <div className="text-xs text-(--text-secondary) truncate">
+                    {conv.lastMessageBody ?? "Start a chat…"}
+                  </div>
+                  {showCount && (
+                    <span className="w-4 h-4 rounded-full bg-green-700 text-white text-[10px] font-bold flex items-center justify-center shrink-0">
+                      {conv.unreadCount}
+                    </span>
+                  )}
                 </div>
               </div>
             </button>

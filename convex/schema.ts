@@ -15,7 +15,8 @@ export default defineSchema({
     participantIds: v.array(v.id("users")),
     lastMessageBody: v.optional(v.string()),
     lastMessageTime: v.optional(v.number()),
-  }).index("by_last_message_time", ["lastMessageTime"]),
+    lastReadTimes: v.optional(v.any()),
+  }).index("by_lastMessageTime", ["lastMessageTime"]),
 
   messages: defineTable({
     chatId: v.id("chats"),
