@@ -7,12 +7,11 @@ export const getOrCreatechat = mutation({
   args: { otherUserId: v.id("users") },
   handler: async (ctx, { otherUserId }) => {
     const me = await getCurrentUser(ctx);
+    if (!me) throw new Error("Unauthorized");
 
     // Canonical ordering so we always find the same row
     const ids: [Id<"users">, Id<"users">] =
-      me._id < otherUserId
-        ? [me._id, otherUserId]
-        : [otherUserId, me._id];
+      me._id < otherUserId ? [me._id, otherUserId] : [otherUserId, me._id];
 
     // Look for existing chat
     const all = await ctx.db.query("chats").collect();
@@ -20,7 +19,7 @@ export const getOrCreatechat = mutation({
       (c) =>
         c.participantIds.length === 2 &&
         c.participantIds.includes(ids[0]) &&
-        c.participantIds.includes(ids[1])
+        c.participantIds.includes(ids[1]),
     );
 
     if (existing) return existing._id;
@@ -38,23 +37,21 @@ export const listMychats = query({
   args: {},
   handler: async (ctx) => {
     const me = await getCurrentUser(ctx);
+    if (!me || !me._id) return [];
 
-    const all = await ctx.db
-      .query("chats")
-      .order("desc")
-      .collect();
-
-    const mine = all.filter((c) => c.participantIds.includes(me._id));
+    const myId = me._id;
+    const all = await ctx.db.query("chats").order("desc").collect();
+    const mine = all.filter((c) => c.participantIds.includes(myId));
 
     const now = Date.now();
     // Hydrate and calculate unread counts
     const result = await Promise.all(
       mine.map(async (chat) => {
-        const otherId = chat.participantIds.find((id) => id !== me._id)!;
+        const otherId = chat.participantIds.find((id) => id !== myId)!;
         const other = await ctx.db.get(otherId);
 
         // Get unread count
-        const lastRead = chat.lastReadTimes?.[me._id] ?? 0;
+        const lastRead = chat.lastReadTimes?.[myId] ?? 0;
         const unreads = await ctx.db
           .query("messages")
           .withIndex("by_chat", (q) => q.eq("chatId", chat._id))
@@ -64,17 +61,19 @@ export const listMychats = query({
         return {
           ...chat,
           unreadCount: unreads.length,
-          otherUser: other ? {
-            ...other,
-            isOnline: other.lastSeen ? now - other.lastSeen < 60000 : false,
-          } : null,
+          otherUser: other
+            ? {
+                ...other,
+                isOnline: other.lastSeen ? now - other.lastSeen < 60000 : false,
+              }
+            : null,
         };
-      })
+      }),
     );
 
     // Sort by most recent message
     return result.sort(
-      (a, b) => (b.lastMessageTime ?? 0) - (a.lastMessageTime ?? 0)
+      (a, b) => (b.lastMessageTime ?? 0) - (a.lastMessageTime ?? 0),
     );
   },
 });
@@ -83,8 +82,14 @@ export const markAsRead = mutation({
   args: { chatId: v.id("chats") },
   handler: async (ctx, { chatId }) => {
     const me = await getCurrentUser(ctx);
+    if (!me) throw new Error("Unauthorized");
     const chat = await ctx.db.get(chatId);
     if (!chat) return;
+
+    const currentReadTime = chat.lastReadTimes?.[me._id] ?? 0;
+    if (currentReadTime >= (chat.lastMessageTime ?? 0)) {
+      return;
+    }
 
     const lastReadTimes = { ...(chat.lastReadTimes ?? {}) };
     lastReadTimes[me._id] = Date.now();
@@ -97,13 +102,16 @@ export const getUnreadCounts = query({
   args: {},
   handler: async (ctx) => {
     const me = await getCurrentUser(ctx);
+    if (!me || !me._id) return 0;
+    const myId = me._id;
+
     const chats = await ctx.db.query("chats").collect();
-    const myChats = chats.filter((c) => c.participantIds.includes(me._id));
+    const myChats = chats.filter((c) => c.participantIds.includes(myId));
 
     let totalUnreadChats = 0;
 
     for (const chat of myChats) {
-      const lastRead = chat.lastReadTimes?.[me._id] ?? 0;
+      const lastRead = chat.lastReadTimes?.[myId] ?? 0;
       const unreads = await ctx.db
         .query("messages")
         .withIndex("by_chat", (q) => q.eq("chatId", chat._id))
@@ -126,6 +134,7 @@ export const sendMessage = mutation({
   },
   handler: async (ctx, { chatId, body }) => {
     const me = await getCurrentUser(ctx);
+    if (!me) throw new Error("Unauthorized");
 
     const now = Date.now();
 
@@ -141,7 +150,7 @@ export const sendMessage = mutation({
     if (chat) {
       const lastReadTimes = { ...(chat.lastReadTimes ?? {}) };
       lastReadTimes[me._id] = now;
-      
+
       await ctx.db.patch(chatId, {
         lastMessageBody: body,
         lastMessageTime: now,
@@ -155,18 +164,18 @@ export const getMessages = query({
   args: { chatId: v.id("chats") },
   handler: async (ctx, { chatId }) => {
     const me = await getCurrentUser(ctx);
+    if (!me || !me._id) return [];
+    const myId = me._id;
 
     const messages = await ctx.db
       .query("messages")
-      .withIndex("by_chat", (q) =>
-        q.eq("chatId", chatId)
-      )
+      .withIndex("by_chat", (q) => q.eq("chatId", chatId))
       .order("asc")
       .collect();
 
     return messages.map((msg) => ({
       ...msg,
-      isOwn: msg.senderId === me._id,
+      isOwn: msg.senderId === myId,
     }));
   },
 });

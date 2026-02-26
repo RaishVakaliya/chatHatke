@@ -1,5 +1,10 @@
 import { v } from "convex/values";
-import { query, type QueryCtx, type MutationCtx, mutation } from "./_generated/server";
+import {
+  query,
+  type QueryCtx,
+  type MutationCtx,
+  mutation,
+} from "./_generated/server";
 
 export const createUser = mutation({
   args: {
@@ -34,16 +39,12 @@ export const createUser = mutation({
 
 export async function getCurrentUser(ctx: QueryCtx | MutationCtx) {
   const identity = await ctx.auth.getUserIdentity();
-  if (!identity) throw new Error("Unauthorized");
+  if (!identity) return null;
 
-  const currentUser = await ctx.db
+  return await ctx.db
     .query("users")
     .withIndex("by_clerkId", (q) => q.eq("clerkId", identity.subject))
     .first();
-
-  if (!currentUser) throw new Error("User not found");
-
-  return currentUser;
 }
 
 export const getUserByClerkId = query({
@@ -68,7 +69,7 @@ export const listOtherUsers = query({
 
     const all = await ctx.db.query("users").collect();
     const now = Date.now();
-    
+
     return all
       .filter((u) => u.clerkId !== identity.subject)
       .map((u) => ({
@@ -82,6 +83,7 @@ export const updatePresence = mutation({
   args: {},
   handler: async (ctx) => {
     const user = await getCurrentUser(ctx);
+    if (!user) return;
     await ctx.db.patch(user._id, { lastSeen: Date.now() });
   },
 });

@@ -72,12 +72,7 @@ export default function UserPicker({ onSelectUser, onClose }: UserPickerProps) {
             >
               <div className="w-9 h-9 rounded-full overflow-hidden bg-zinc-700 flex items-center justify-center text-xs font-semibold text-white shrink-0">
                 {u.imageUrl ? (
-                  <Image
-                    src={u.imageUrl}
-                    alt={name}
-                    width={36}
-                    height={36}
-                  />
+                  <Image src={u.imageUrl} alt={name} width={36} height={36} />
                 ) : (
                   <span>
                     {name

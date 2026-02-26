@@ -127,7 +127,8 @@ export default function ChatSidebar({
             </div>
             <p className="text-sm text-zinc-400 font-medium">No chats yet</p>
             <p className="text-xs text-zinc-500">
-              Tap <strong className="text-zinc-400">+</strong> to start a new chat
+              Tap <strong className="text-zinc-400">+</strong> to start a new
+              chat
             </p>
           </div>
         )}
@@ -157,7 +158,9 @@ export default function ChatSidebar({
                   <span className="text-sm font-semibold text-(--text-primary) truncate">
                     {name}
                   </span>
-                  <span className={`text-[11px] shrink-0 whitespace-nowrap ${showCount ? "text-green-500 font-bold" : "text-(--text-secondary)"}`}>
+                  <span
+                    className={`text-[11px] shrink-0 whitespace-nowrap ${showCount ? "text-green-500 font-bold" : "text-(--text-secondary)"}`}
+                  >
                     {formatTime(conv.lastMessageTime)}
                   </span>
                 </div>
