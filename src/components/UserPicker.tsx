@@ -34,7 +34,7 @@ export default function UserPicker({ onSelectUser, onClose }: UserPickerProps) {
       <div>
         <h2 className="text-sm font-semibold text-white">Start new chat</h2>
         <p className="text-xs text-zinc-400 mt-0.5">
-          Choose a user to start a conversation.
+          Choose a user to start a chat.
         </p>
       </div>
 

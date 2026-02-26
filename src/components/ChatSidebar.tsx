@@ -1,42 +1,73 @@
 "use client";
 
-import { Chat } from "@/types";
-import ChatListItem from "./ChatListItem";
-import { Search, Plus } from "lucide-react";
 import { useState } from "react";
+import { Id } from "../../convex/_generated/dataModel";
+import { Search, Plus } from "lucide-react";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
 import UserPicker from "./UserPicker";
+import Image from "next/image";
+
+interface ChatItem {
+  _id: Id<"chats">;
+  lastMessageBody?: string;
+  lastMessageTime?: number;
+  otherUser: {
+    _id: Id<"users">;
+    fullName?: string;
+    username?: string;
+    email?: string;
+    imageUrl?: string;
+  } | null;
+}
 
 interface ChatSidebarProps {
-  chats: Chat[];
-  activeChatId: string;
-  onSelectChat: (chatId: string) => void;
+  chats: ChatItem[];
+  activeConvId: Id<"chats"> | null;
+  onSelectChat: (id: Id<"chats">) => void;
   onUserSelected: (user: any) => void;
+}
+
+function formatTime(ts?: number) {
+  if (!ts) return "";
+  const d = new Date(ts);
+  const now = new Date();
+  const diff = now.getTime() - d.getTime();
+  const mins = Math.floor(diff / 60000);
+  if (mins < 1) return "now";
+  if (mins < 60) return `${mins}m`;
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24) return `${hrs}h`;
+  const days = Math.floor(hrs / 24);
+  if (days < 7) return `${days}d`;
+  return d.toLocaleDateString(undefined, { month: "short", day: "numeric" });
 }
 
 export default function ChatSidebar({
   chats,
-  activeChatId,
+  activeConvId,
   onSelectChat,
   onUserSelected,
 }: ChatSidebarProps) {
   const [search, setSearch] = useState("");
   const [popoverOpen, setPopoverOpen] = useState(false);
 
-  const filtered = chats.filter((c) =>
-    c.user.name.toLowerCase().includes(search.toLowerCase()),
-  );
+  const filtered = chats.filter((c) => {
+    const name =
+      c.otherUser?.fullName ??
+      c.otherUser?.username ??
+      c.otherUser?.email ??
+      "";
+    return name.toLowerCase().includes(search.toLowerCase());
+  });
 
   return (
     <div
       className="flex flex-col h-full"
-      style={{
-        background: "var(--bg-sidebar)",
-      }}
+      style={{ background: "var(--bg-sidebar)" }}
     >
       {/* Header */}
       <div className="flex items-center justify-between px-4 pt-5 pb-4">
@@ -45,7 +76,7 @@ export default function ChatSidebar({
         <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
           <PopoverTrigger asChild>
             <button
-              className="w-8 h-8 border-1 rounded-full flex items-center justify-center text-(--text-secondary) hover:bg-(--active-chat) transition-colors"
+              className="w-8 h-8 border border-(--border) rounded-full flex items-center justify-center text-(--text-secondary) hover:bg-(--active-chat) transition-colors"
               aria-label="New chat"
             >
               <Plus className="w-4 h-4" />
@@ -85,16 +116,74 @@ export default function ChatSidebar({
         </div>
       </div>
 
-      {/* Chat list */}
+      {/* chat list */}
       <div className="flex-1 overflow-y-auto custom-scroll px-2 pb-4 space-y-0.5">
-        {filtered.map((chat) => (
-          <ChatListItem
-            key={chat.id}
-            chat={chat}
-            isActive={activeChatId === chat.id}
-            onClick={() => onSelectChat(chat.id)}
-          />
-        ))}
+        {chats.length === 0 && (
+          <div className="flex flex-col items-center justify-center py-16 gap-2 text-center px-4">
+            <div className="w-12 h-12 rounded-full bg-zinc-800 flex items-center justify-center mb-1">
+              <Plus className="w-5 h-5 text-zinc-500" />
+            </div>
+            <p className="text-sm text-zinc-400 font-medium">No chats yet</p>
+            <p className="text-xs text-zinc-500">
+              Tap <strong className="text-zinc-400">+</strong> to start a new chat
+            </p>
+          </div>
+        )}
+
+        {filtered.map((conv) => {
+          const name =
+            conv.otherUser?.fullName ??
+            conv.otherUser?.username ??
+            conv.otherUser?.email ??
+            "Unknown";
+          const initials = name
+            .split(" ")
+            .map((n) => n[0])
+            .join("")
+            .slice(0, 2)
+            .toUpperCase();
+          const isActive = conv._id === activeConvId;
+
+          return (
+            <button
+              key={conv._id}
+              onClick={() => onSelectChat(conv._id)}
+              className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl transition-all duration-150 text-left ${
+                isActive ? "bg-(--active-chat)" : "hover:bg-(--active-chat)/60"
+              }`}
+            >
+              {/* Avatar */}
+              <div className="w-10 h-10 rounded-full overflow-hidden bg-zinc-700 flex items-center justify-center text-xs font-semibold text-white shrink-0">
+                {conv.otherUser?.imageUrl ? (
+                  <Image
+                    src={conv.otherUser.imageUrl}
+                    alt={name}
+                    width={40}
+                    height={40}
+                    className="object-cover w-full h-full"
+                  />
+                ) : (
+                  <span>{initials}</span>
+                )}
+              </div>
+
+              {/* Info */}
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center justify-between gap-2 mb-0.5">
+                  <span className="text-sm font-semibold text-(--text-primary) truncate">
+                    {name}
+                  </span>
+                  <span className="text-[11px] text-(--text-secondary) shrink-0 whitespace-nowrap">
+                    {formatTime(conv.lastMessageTime)}
+                  </span>
+                </div>
+                <div className="text-xs text-(--text-secondary) truncate">
+                  {conv.lastMessageBody ?? "Start a chat…"}
+                </div>
+              </div>
+            </button>
+          );
+        })}
       </div>
     </div>
   );
