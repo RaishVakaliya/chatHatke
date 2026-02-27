@@ -34,12 +34,30 @@ export default function TopBar() {
 
   return (
     <div
-      className="flex items-center justify-end px-4 py-2.5 shrink-0 relative"
+      className="flex items-center justify-between px-4 py-2 shrink-0 relative"
       style={{
         borderBottom: "1px solid var(--border)",
         background: "var(--bg-primary)",
       }}
     >
+      {/* App Logo+Name */}
+      <div className="flex items-center gap-2.5 select-none cursor-pointer">
+        <Image
+          src="/app_logo.png"
+          alt="chatHatke logo"
+          width={36}
+          height={36}
+          className="rounded-lg object-contain"
+        />
+        <span
+          className="text-lg font-bold tracking-tight"
+          style={{ color: "var(--text-primary)" }}
+        >
+          chat<span className="text-green-500">Hatke</span>
+        </span>
+      </div>
+
+      {/* Right side icons */}
       <div className="flex items-center gap-1">
         <div className="relative">
           <button className="relative w-8 h-8 flex items-center justify-center rounded-full text-[var(--text-secondary)] hover:bg-[var(--active-chat)] transition-colors">

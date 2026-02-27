@@ -15,8 +15,23 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "ChatNext",
-  description: "Connect with anyone, anywhere",
+  title: "chatHatke - Chat differently",
+  description:
+    "Real-time private messaging with a twist. Talk to anyone, anywhere.",
+  icons: {
+    icon: "/app_logo.png",
+    apple: "/app_logo.png",
+  },
+  openGraph: {
+    title: "chatHatke",
+    description: "Real-time private messaging with a twist.",
+    images: ["/app_logo.png"],
+  },
+  twitter: {
+    card: "summary",
+    title: "chatHatke",
+    description: "Connect with anyone, anywhere",
+  },
 };
 
 import PresenceTracker from "@/components/PresenceTracker";
