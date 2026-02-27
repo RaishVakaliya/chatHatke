@@ -58,9 +58,6 @@ export default function TopBar() {
         >
           {dark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
         </button>
-        <button className="w-8 h-8 flex items-center justify-center rounded-full text-[var(--text-secondary)] hover:bg-[var(--active-chat)] transition-colors">
-          <HelpCircle className="w-4 h-4" />
-        </button>
 
         {/* profile avatar */}
         <DropdownMenu>

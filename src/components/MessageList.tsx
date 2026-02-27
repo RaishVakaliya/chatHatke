@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useQuery } from "convex/react";
+import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { Id } from "../../convex/_generated/dataModel";
 import MessageBubble from "./MessageBubble";
@@ -49,6 +49,7 @@ function DateSeparator({ label }: { label: string }) {
 
 export default function MessageList({ chatId }: MessageListProps) {
   const messages = useQuery(api.chats.getMessages, { chatId });
+  const sendHello = useMutation(api.chats.sendMessage);
   const scrollRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const [showNewMessages, setShowNewMessages] = useState(false);
@@ -102,10 +103,23 @@ export default function MessageList({ chatId }: MessageListProps) {
         )}
 
         {messages?.length === 0 && (
-          <div className="flex items-center justify-center h-full">
+          <div className="flex flex-col items-center justify-center h-full gap-3">
             <p className="text-xs text-zinc-500">
               No messages yet. Say hello! 👋
             </p>
+            <button
+              onClick={() =>
+                sendHello({ chatId, body: "Hello! 👋" }).catch(() => {})
+              }
+              className="px-4 py-2 rounded-full text-xs font-semibold transition-all hover:scale-105 active:scale-95"
+              style={{
+                background: "var(--active-chat)",
+                color: "var(--text-primary)",
+                border: "1px solid var(--border)",
+              }}
+            >
+              Say Hello! 👋
+            </button>
           </div>
         )}
 

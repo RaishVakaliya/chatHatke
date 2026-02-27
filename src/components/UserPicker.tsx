@@ -29,7 +29,7 @@ export default function UserPicker({ onSelectUser, onClose }: UserPickerProps) {
   }, [users, search]);
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col h-full p-4 gap-3">
       {/* Header */}
       <div>
         <h2 className="text-sm font-semibold text-white">Start new chat</h2>
@@ -52,7 +52,7 @@ export default function UserPicker({ onSelectUser, onClose }: UserPickerProps) {
       </div>
 
       {/* User list */}
-      <div className="max-h-64 overflow-y-auto space-y-0.5 custom-scroll pr-1">
+      <div className="flex-1 overflow-y-auto space-y-0.5 custom-scroll pr-1">
         {filtered.length === 0 && (
           <div className="text-xs text-zinc-500 py-6 text-center">
             {users ? "No users found." : "Loading users..."}

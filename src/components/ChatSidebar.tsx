@@ -88,7 +88,8 @@ export default function ChatSidebar({
             side="bottom"
             align="end"
             sideOffset={8}
-            className="w-80 p-4 bg-zinc-950 border border-zinc-800 rounded-2xl shadow-2xl"
+            className="w-80 p-0 bg-zinc-950 border border-zinc-800 rounded-2xl shadow-2xl overflow-hidden"
+            style={{ height: "calc(100dvh - 9rem)" }}
           >
             <UserPicker
               onSelectUser={(user) => {
