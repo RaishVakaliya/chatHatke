@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/popover";
 import UserPicker from "./UserPicker";
 import UserAvatar from "./UserAvatar";
+import TypingIndicator from "./TypingIndicator";
 
 interface ChatItem {
   _id: Id<"chats">;

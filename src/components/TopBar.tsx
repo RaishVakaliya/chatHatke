@@ -112,7 +112,7 @@ export default function TopBar() {
                 )}
               </div>
               <div className="min-w-0">
-                <div className="text-sm font-semibold truncate">
+                <div className="text-sm text-zinc-300 font-semibold truncate">
                   {user?.fullName || user?.username || "User"}
                 </div>
                 <div className="text-xs text-zinc-400 truncate">
