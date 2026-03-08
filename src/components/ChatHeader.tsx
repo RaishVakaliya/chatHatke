@@ -17,12 +17,16 @@ interface ChatHeaderProps {
   showBack?: boolean;
 }
 
-export default function ChatHeader({ otherUser, onBack, showBack }: ChatHeaderProps) {
+export default function ChatHeader({
+  otherUser,
+  onBack,
+  showBack,
+}: ChatHeaderProps) {
   const name =
     otherUser?.fullName ??
     otherUser?.username ??
     otherUser?.email ??
-    "Unknown";
+    "Deleted User";
 
   return (
     <div

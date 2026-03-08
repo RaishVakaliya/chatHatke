@@ -10,7 +10,12 @@ import {
 } from "@/components/ui/popover";
 import UserPicker from "./UserPicker";
 import UserAvatar from "./UserAvatar";
-import TypingIndicator from "./TypingIndicator";
+import { Artifika } from "next/font/google";
+
+const artifika = Artifika({
+  subsets: ["latin"],
+  weight: "400",
+});
 
 interface ChatItem {
   _id: Id<"chats">;
@@ -74,7 +79,11 @@ export default function ChatSidebar({
     >
       {/* Header */}
       <div className="flex items-center justify-between px-4 pt-5 pb-4">
-        <h1 className="text-xl font-bold text-(--text-primary)">Chats</h1>
+        <h1
+          className={`${artifika.className} text-2xl font-bold text-(--text-primary)`}
+        >
+          Chats
+        </h1>
 
         <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
           <PopoverTrigger asChild>
@@ -140,7 +149,7 @@ export default function ChatSidebar({
             conv.otherUser?.fullName ??
             conv.otherUser?.username ??
             conv.otherUser?.email ??
-            "Unknown";
+            "Deleted User";
           const isActive = conv._id === activeConvId;
           const showCount = !isActive && (conv.unreadCount ?? 0) > 0;
 

@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { Ghost } from "lucide-react";
 
 interface User {
   fullName?: string;
@@ -30,10 +31,8 @@ export default function UserAvatar({
   const sizeClass = sizeMap[size];
 
   const name =
-    user?.fullName ??
-    user?.username ??
-    user?.email ??
-    "Unknown";
+    user?.fullName ?? user?.username ?? user?.email ?? "Deleted User";
+  const isDeleted = !user || (!user.fullName && !user.username && !user.email);
 
   const initials = name
     .split(" ")
@@ -43,7 +42,7 @@ export default function UserAvatar({
     .toUpperCase();
 
   return (
-    <div className={`relative shrink-0 ${sizeClass}`}>
+    <div className={`relative select-none shrink-0 ${sizeClass}`}>
       {user?.imageUrl ? (
         <Image
           src={user.imageUrl}
@@ -54,18 +53,34 @@ export default function UserAvatar({
         />
       ) : (
         <div
-          className={`rounded-full flex items-center justify-center font-semibold ${sizeClass}`}
+          className={`rounded-full flex items-center justify-center font-semibold ${sizeClass} ${
+            isDeleted
+              ? "border-2 border-dashed border-zinc-700 opacity-40 transition-opacity"
+              : ""
+          }`}
           style={{
-            background: "var(--active-chat)",
+            background: isDeleted ? "transparent" : "var(--active-chat)",
             color: "var(--text-primary)",
           }}
         >
-          {initials}
+          {isDeleted ? (
+            <Ghost
+              className={
+                size === "sm"
+                  ? "w-3 h-3"
+                  : size === "md"
+                    ? "w-4 h-4"
+                    : "w-5 h-5"
+              }
+            />
+          ) : (
+            <span>{initials}</span>
+          )}
         </div>
       )}
       {showOnline && user?.isOnline && (
-        <span 
-          className="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-green-500 border-2" 
+        <span
+          className="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-green-500 border-2"
           style={{ borderColor: "var(--bg-sidebar)" }}
         />
       )}

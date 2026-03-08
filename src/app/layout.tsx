@@ -34,6 +34,7 @@ export const metadata: Metadata = {
 };
 
 import PresenceTracker from "@/components/PresenceTracker";
+import { Toaster } from "sonner";
 
 export default function RootLayout({
   children,
@@ -52,6 +53,7 @@ export default function RootLayout({
           signUpFallbackRedirectUrl="/chat"
         >
           <ConvexClientProvider>
+            <Toaster position="bottom-right" richColors theme="dark" />
             <PresenceTracker />
             {children}
           </ConvexClientProvider>
