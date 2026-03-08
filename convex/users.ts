@@ -87,3 +87,15 @@ export const updatePresence = mutation({
     await ctx.db.patch(user._id, { lastSeen: Date.now() });
   },
 });
+
+export const deleteUser = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const user = await getCurrentUser(ctx);
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    await ctx.db.delete(user._id);
+  },
+});
