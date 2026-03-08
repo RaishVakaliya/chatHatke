@@ -19,7 +19,6 @@ export const metadata: Metadata = {
   description:
     "Real-time private messaging with a twist. Talk to anyone, anywhere.",
   icons: {
-    icon: "/app_logo.png",
     apple: "/app_logo.png",
   },
   openGraph: {
