@@ -15,21 +15,70 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "chatHatke - Chat differently",
+  metadataBase: new URL("https://chathatke.tech"),
+  title: {
+    default: "chatHatke - Chat Differently",
+    template: "%s | chatHatke",
+  },
   description:
-    "Real-time private messaging with a twist. Talk to anyone, anywhere.",
+    "chatHatke is a real-time messaging platform to stay connected with friends, family, and colleagues. Enjoy private conversations, and a secure friend network.",
+  keywords: [
+    "chatHatke",
+    "chathatke website",
+    "chat hatke",
+    "chatting with friends",
+    "chat app",
+    "messaging app",
+    "real time chat",
+    "private chatting",
+  ],
+  authors: [{ name: "chatHatke", url: "https://chathatke.tech" }],
+  creator: "chatHatke",
+  publisher: "chatHatke",
+  alternates: {
+    canonical: "https://chathatke.tech",
+  },
   icons: {
+    icon: "/favicon.ico",
     apple: "/app_logo.png",
   },
   openGraph: {
-    title: "chatHatke",
-    description: "Real-time private messaging with a twist.",
-    images: ["/app_logo.png"],
+    type: "website",
+    locale: "en_US",
+    url: "https://chathatke.tech",
+    siteName: "chatHatke",
+    title: "chatHatke – Chat Differently",
+    description:
+      "Stay connected with friends, family, and colleagues. Group chats, private messaging, and a secure friend network — all in one place.",
+    images: [
+      {
+        url: "/app_logo.png",
+        width: 512,
+        height: 512,
+        alt: "chatHatke App Logo",
+        type: "image/png",
+      },
+    ],
   },
   twitter: {
-    card: "summary",
-    title: "chatHatke",
-    description: "Connect with anyone, anywhere",
+    card: "summary_large_image",
+    site: "@chatHatke",
+    creator: "@chatHatke",
+    title: "chatHatke – Chat Differently",
+    description:
+      "Stay connected with friends, family, and colleagues. Group chats, private messaging, and a secure friend network — all in one place.",
+    images: ["/app_logo.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
   },
 };
 
