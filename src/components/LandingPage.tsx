@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { SignInButton, useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
-import { MessageCircle, Users, Lock, ArrowRight } from "lucide-react";
+import { Users, Lock, ArrowRight } from "lucide-react";
 import { Button } from "./ui/button";
 
 export default function LandingPage() {
@@ -49,8 +49,8 @@ export default function LandingPage() {
             Connect with anyone, anywhere
           </h1>
           <p className="text-zinc-400 text-lg max-w-2xl mx-auto mb-10">
-            ChatApp makes it easy to stay connected with friends, family, and
-            colleagues. Send messages and share photos in one place.
+            chatHatke makes it easy to stay connected with friends, family, and
+            colleagues. Send messages and chat in real-time, all in one place.
           </p>
           {isSignedIn ? (
             <Button
@@ -81,20 +81,11 @@ export default function LandingPage() {
             Everything you need to stay connected
           </h2>
           <p className="text-zinc-400 text-center max-w-2xl mx-auto mb-16">
-            ChatApp combines the best features of messaging apps with innovative
-            new tools to make communication easier and more enjoyable.
+            chatHatke combines the best features of messaging apps to make
+            communication easier and more enjoyable.
           </p>
 
-          <div className="grid md:grid-cols-3 gap-12">
-            <div className="flex flex-col items-center text-center">
-              <div className="w-14 h-14 rounded-xl bg-zinc-800/80 flex items-center justify-center mb-4">
-                <MessageCircle className="w-7 h-7 text-zinc-300" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Group Chats</h3>
-              <p className="text-zinc-400 text-sm">
-                Connect in vibrant group spaces.
-              </p>
-            </div>
+          <div className="grid md:grid-cols-2 gap-12 max-w-2xl mx-auto">
             <div className="flex flex-col items-center text-center">
               <div className="w-14 h-14 rounded-xl bg-zinc-800/80 flex items-center justify-center mb-4">
                 <Users className="w-7 h-7 text-zinc-300" />
@@ -122,7 +113,7 @@ export default function LandingPage() {
             Ready to get started?
           </h2>
           <p className="text-zinc-400 max-w-xl mx-auto mb-8">
-            Register ChatApp today and join for enjoying better communication.
+            Join chatHatke today and enjoy better, real-time communication.
           </p>
           {isSignedIn ? (
             <Button
@@ -142,7 +133,7 @@ export default function LandingPage() {
 
         {/* Footer */}
         <footer className="text-center text-zinc-500 text-sm">
-          © 2025 ChatApp. All rights reserved.
+          © {new Date().getFullYear()} chatHatke. All rights reserved.
         </footer>
       </div>
     </div>
