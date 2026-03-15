@@ -84,11 +84,10 @@ export default function UserPicker({ onSelectUser, onClose }: UserPickerProps) {
                   </span>
                 )}
               </div>
-              <div className="min-w-0">
+              <div className="min-w-0 flex flex-col justify-center">
                 <div className="text-sm text-white font-medium truncate">
                   {name}
                 </div>
-                <div className="text-xs text-zinc-400 truncate">{u.email}</div>
               </div>
             </button>
           );
