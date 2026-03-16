@@ -24,13 +24,13 @@ export const createUser = mutation({
       return existingUser._id;
     }
 
-    // Create new user
     const userId = await ctx.db.insert("users", {
       clerkId: args.clerkId,
       email: args.email,
       fullName: args.fullName,
       username: args.username,
       imageUrl: args.imageUrl ?? "",
+      about: "Hey there! I am using ChatHatke",
     });
 
     return userId;
@@ -56,6 +56,13 @@ export const getUserByClerkId = query({
       .first();
 
     return user;
+  },
+});
+
+export const me = query({
+  args: {},
+  handler: async (ctx) => {
+    return await getCurrentUser(ctx);
   },
 });
 
@@ -97,5 +104,14 @@ export const deleteUser = mutation({
     }
 
     await ctx.db.delete(user._id);
+  },
+});
+
+export const updateAbout = mutation({
+  args: { about: v.string() },
+  handler: async (ctx, { about }) => {
+    const user = await getCurrentUser(ctx);
+    if (!user) throw new Error("Not authenticated");
+    await ctx.db.patch(user._id, { about });
   },
 });

@@ -9,6 +9,7 @@ export default defineSchema({
     imageUrl: v.optional(v.string()),
     clerkId: v.string(),
     lastSeen: v.optional(v.number()),
+    about: v.optional(v.string()),
   }).index("by_clerkId", ["clerkId"]),
 
   chats: defineTable({
