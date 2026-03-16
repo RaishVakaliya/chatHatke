@@ -81,7 +81,7 @@ export default function ChatInput({ chatId }: ChatInputProps) {
               <button
                 key={emoji}
                 onClick={() => insertEmoji(emoji)}
-                className="text-xl w-9 h-9 flex items-center justify-center rounded-lg hover:scale-125 transition-transform hover:bg-(--active-chat)"
+                className="text-xl w-9 h-9 flex items-center justify-center rounded-lg transition-transform hover:bg-(--active-chat)"
                 title={emoji}
               >
                 {emoji}

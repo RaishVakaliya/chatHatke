@@ -1,11 +1,22 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Bell, Sun, Moon, HelpCircle, LogOut, Trash2 } from "lucide-react";
+import {
+  Bell,
+  Sun,
+  Moon,
+  HelpCircle,
+  LogOut,
+  Trash2,
+  Edit2,
+  Check,
+  X,
+} from "lucide-react";
 import { useUser, useClerk } from "@clerk/nextjs";
 import { Varela_Round, Unbounded } from "next/font/google";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
+import { PRESETS } from "@/constant/preset";
 import Image from "next/image";
 import { toast } from "sonner";
 import {
@@ -42,6 +53,30 @@ export default function TopBar() {
   const { user } = useUser();
   const { signOut } = useClerk();
   const deleteUserFromConvex = useMutation(api.users.deleteUser);
+  const userProfile = useQuery(api.users.me);
+  const updateAbout = useMutation(api.users.updateAbout);
+
+  const [isEditingAbout, setIsEditingAbout] = useState(false);
+  const [aboutInput, setAboutInput] = useState("");
+
+  useEffect(() => {
+    if (userProfile?.about) {
+      setAboutInput(userProfile.about);
+    }
+  }, [userProfile]);
+
+  const handleUpdateAbout = async (value: string) => {
+    const status = value.trim();
+    if (!status) return;
+
+    try {
+      await updateAbout({ about: status });
+      setIsEditingAbout(false);
+      toast.success("Status updated!");
+    } catch (err) {
+      toast.error("Failed to update status");
+    }
+  };
 
   useEffect(() => {
     if (dark) {
@@ -234,6 +269,54 @@ export default function TopBar() {
                   </AlertDialogContent>
                 </AlertDialog>
               </div>
+            </div>
+
+            <div className="px-4 py-3 border-b border-zinc-800">
+              {isEditingAbout ? (
+                <div className="relative">
+                  <input
+                    type="text"
+                    value={aboutInput}
+                    onChange={(e) => setAboutInput(e.target.value)}
+                    className="w-full bg-zinc-950 border border-zinc-800 rounded-lg pl-3 pr-14 py-1.5 text-xs text-zinc-100 focus:outline-none focus:ring-1 focus:ring-green-500/50"
+                    autoFocus
+                    maxLength={50}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") handleUpdateAbout(aboutInput);
+                      if (e.key === "Escape") setIsEditingAbout(false);
+                    }}
+                  />
+                  <div className="absolute right-1 top-1 flex items-center gap-0.5">
+                    <button
+                      onClick={() => handleUpdateAbout(aboutInput)}
+                      className="p-1.5 bg-green-600/20 text-green-500 rounded-md hover:bg-green-600/30 transition-all"
+                    >
+                      <Check className="w-3 h-3" />
+                    </button>
+                    <button
+                      onClick={() => {
+                        setIsEditingAbout(false);
+                        setAboutInput(userProfile?.about || "");
+                      }}
+                      className="p-1.5 bg-zinc-800 text-zinc-400 rounded-md hover:bg-zinc-700 transition-all"
+                    >
+                      <X className="w-3 h-3" />
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex items-center justify-between gap-2">
+                  <div className="text-xs text-zinc-300 italic break-words line-clamp-2 flex-1">
+                    {userProfile?.about || "Set a status..."}
+                  </div>
+                  <button
+                    onClick={() => setIsEditingAbout(true)}
+                    className="p-1 shrink-0 rounded-md hover:bg-zinc-800 text-zinc-500 hover:text-zinc-300 transition-all"
+                  >
+                    <Edit2 className="w-3 h-3" />
+                  </button>
+                </div>
+              )}
             </div>
 
             <DropdownMenuItem

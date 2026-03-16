@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
-import ConvexClientProvider from "@/components/ConvexProviderWithClerk";
+import ConvexClientProvider from "@/providers/ConvexProviderWithClerk";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -47,7 +47,7 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: "https://chathatke.tech",
     siteName: "chatHatke",
-    title: "chatHatke – Chat Differently",
+    title: "chatHatke - Chat Differently",
     description:
       "Stay connected with friends, family, and colleagues. Group chats, private messaging, and a secure friend network — all in one place.",
     images: [
@@ -64,7 +64,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     site: "@chatHatke",
     creator: "@chatHatke",
-    title: "chatHatke – Chat Differently",
+    title: "chatHatke - Chat Differently",
     description:
       "Stay connected with friends, family, and colleagues. Group chats, private messaging, and a secure friend network — all in one place.",
     images: ["/app_logo.png"],

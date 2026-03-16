@@ -11,13 +11,16 @@ import ChatHeader from "@/components/ChatHeader";
 import MessageList from "@/components/MessageList";
 import ChatInput from "@/components/ChatInput";
 import TopBar from "@/components/TopBar";
+import SetAboutModal from "@/components/SetAboutModal";
 
 export default function ChatPage() {
   const { isSignedIn, isLoaded } = useAuth();
   const router = useRouter();
 
+  const userProfile = useQuery(api.users.me);
   const [activeConvId, setActiveConvId] = useState<Id<"chats"> | null>(null);
   const [showChat, setShowChat] = useState(false);
+  const [dismissedAboutModal, setDismissedAboutModal] = useState(false);
 
   const chats = useQuery(api.chats.listMychats, {});
   const getOrCreate = useMutation(api.chats.getOrCreatechat);
@@ -26,6 +29,13 @@ export default function ChatPage() {
 
   const activeConv = chats?.find((c) => c._id === activeConvId) ?? null;
   const activeUnreadCount = activeConv?.unreadCount ?? 0;
+
+  const DEFAULT_ABOUT = "Hey there! I am using ChatHatke";
+  const shouldShowAboutModal =
+    isLoaded &&
+    userProfile &&
+    userProfile.about === DEFAULT_ABOUT &&
+    !dismissedAboutModal;
 
   useEffect(() => {
     if (activeConvId && activeUnreadCount > 0) {
@@ -93,7 +103,6 @@ export default function ChatPage() {
           className="flex flex-1 overflow-hidden rounded-2xl"
           style={{ border: "1px solid var(--border)" }}
         >
-          {/* Sidebar */}
           <div
             className={`
               shrink-0 overflow-hidden transition-all duration-200
@@ -112,7 +121,6 @@ export default function ChatPage() {
             </div>
           </div>
 
-          {/* Chat area */}
           <div
             className={`
               flex-1 flex flex-col overflow-hidden
@@ -163,6 +171,12 @@ export default function ChatPage() {
           </div>
         </div>
       </div>
+      {shouldShowAboutModal && (
+        <SetAboutModal
+          onComplete={() => setDismissedAboutModal(true)}
+          onClose={() => setDismissedAboutModal(true)}
+        />
+      )}
     </div>
   );
 }

@@ -13,10 +13,8 @@ export function useTyping(chatId: Id<"chats">) {
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const startTyping = useCallback(() => {
-    // Send a pulse to the server
     setTyping({ chatId }).catch(() => {});
 
-    // Reset the auto-clear timer
     if (timerRef.current) clearTimeout(timerRef.current);
     timerRef.current = setTimeout(() => {
       clearTyping({ chatId }).catch(() => {});
