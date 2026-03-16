@@ -30,7 +30,6 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen bg-zinc-950 text-white relative overflow-hidden">
-      {/* Background: dotted grid + glowing orbs */}
       <div
         className="absolute inset-0 opacity-30"
         style={{
@@ -43,7 +42,6 @@ export default function LandingPage() {
       <div className="absolute top-1/2 right-1/3 w-32 h-32 bg-violet-500/10 rounded-full blur-3xl" />
 
       <div className="relative z-10 max-w-4xl mx-auto px-6 py-16">
-        {/* Hero Section */}
         <section className="text-center mb-24">
           <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-6">
             Connect with anyone, anywhere
@@ -70,7 +68,6 @@ export default function LandingPage() {
           )}
         </section>
 
-        {/* Features Section */}
         <section className="mb-24">
           <div className="flex justify-center mb-4">
             <span className="px-4 py-1.5 rounded-full bg-zinc-800/80 text-zinc-300 text-sm font-medium">
@@ -107,7 +104,6 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* CTA Section */}
         <section className="text-center mb-20">
           <h2 className="text-3xl md:text-4xl font-bold mb-6">
             Ready to get started?
@@ -131,7 +127,6 @@ export default function LandingPage() {
           )}
         </section>
 
-        {/* Footer */}
         <footer className="text-center text-zinc-500 text-sm">
           © {new Date().getFullYear()} chatHatke. All rights reserved.
         </footer>

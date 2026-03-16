@@ -55,13 +55,11 @@ export default function MessageList({ chatId }: MessageListProps) {
   const [showNewMessages, setShowNewMessages] = useState(false);
   const [isAtBottom, setIsAtBottom] = useState(true);
 
-  // Detect scroll position
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
     const target = e.currentTarget;
     const distanceToBottom =
       target.scrollHeight - target.scrollTop - target.clientHeight;
 
-    // We consider it "at bottom" if within 100px of the actual bottom
     const atBottom = distanceToBottom < 100;
     setIsAtBottom(atBottom);
 
@@ -74,7 +72,6 @@ export default function MessageList({ chatId }: MessageListProps) {
     bottomRef.current?.scrollIntoView({ behavior });
   };
 
-  // Handle new messages
   useEffect(() => {
     if (!messages || messages.length === 0) return;
 

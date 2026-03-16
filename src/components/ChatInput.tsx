@@ -20,7 +20,6 @@ export default function ChatInput({ chatId }: ChatInputProps) {
   const sendMessage = useMutation(api.chats.sendMessage);
   const { startTyping, stopTyping } = useTyping(chatId);
 
-  // Close emoji picker when clicking outside
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (emojiRef.current && !emojiRef.current.contains(e.target as Node)) {
@@ -68,7 +67,6 @@ export default function ChatInput({ chatId }: ChatInputProps) {
         background: "var(--bg-sidebar)",
       }}
     >
-      {/* Emoji Picker */}
       {showEmojis && (
         <div
           ref={emojiRef}

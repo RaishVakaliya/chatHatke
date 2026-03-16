@@ -77,7 +77,6 @@ export default function ChatSidebar({
       className="flex flex-col h-full"
       style={{ background: "var(--bg-sidebar)" }}
     >
-      {/* Header */}
       <div className="flex items-center justify-between px-4 pt-5 pb-4">
         <h1
           className={`${artifika.className} text-2xl font-bold text-(--text-primary)`}
@@ -112,7 +111,6 @@ export default function ChatSidebar({
         </Popover>
       </div>
 
-      {/* Search */}
       <div className="px-3 pb-3">
         <div
           className="flex items-center gap-2 px-3 py-2 rounded-xl"
@@ -129,7 +127,6 @@ export default function ChatSidebar({
         </div>
       </div>
 
-      {/* chat list */}
       <div className="flex-1 overflow-y-auto custom-scroll px-2 pb-4 space-y-0.5">
         {chats.length === 0 && (
           <div className="flex flex-col items-center justify-center py-16 gap-2 text-center px-4">
@@ -163,7 +160,6 @@ export default function ChatSidebar({
             >
               <UserAvatar user={conv.otherUser} size="md" showOnline />
 
-              {/* Info */}
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between gap-2 mb-0.5">
                   <span className="text-sm font-semibold text-(--text-primary) truncate">

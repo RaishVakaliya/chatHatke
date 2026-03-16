@@ -15,7 +15,11 @@ function formatTime(ts: number) {
   });
 }
 
-export default function MessageBubble({ body, isOwn, createdAt }: MessageBubbleProps) {
+export default function MessageBubble({
+  body,
+  isOwn,
+  createdAt,
+}: MessageBubbleProps) {
   const time = formatTime(createdAt);
 
   return (
@@ -31,7 +35,6 @@ export default function MessageBubble({ body, isOwn, createdAt }: MessageBubbleP
       >
         <p className="text-sm leading-relaxed whitespace-pre-wrap break-words">
           {body}
-          {/* Spacer to reserve room for the timestamp on the last line */}
           <span
             className="inline-block select-none pointer-events-none"
             style={{ width: isOwn ? "72px" : "44px" }}
@@ -39,13 +42,17 @@ export default function MessageBubble({ body, isOwn, createdAt }: MessageBubbleP
           />
         </p>
 
-        {/* Floating timestamp — bottom-right inside the bubble */}
         <span
           className="absolute bottom-1.5 right-2.5 flex items-center gap-0.5 opacity-60"
           style={{ fontSize: "10px", lineHeight: 1 }}
         >
           {time}
-          {isOwn && <Check className="w-3 h-3 text-green-400 opacity-100" style={{ opacity: 1 }} />}
+          {isOwn && (
+            <Check
+              className="w-3 h-3 text-green-400 opacity-100"
+              style={{ opacity: 1 }}
+            />
+          )}
         </span>
       </div>
     </div>

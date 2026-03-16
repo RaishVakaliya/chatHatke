@@ -15,7 +15,6 @@ export default function TypingIndicator({ chatId }: TypingIndicatorProps) {
 
   return (
     <div className="flex justify-start py-1 animate-in fade-in slide-in-from-bottom-1 duration-200">
-      {/* Bubble */}
       <div
         className="flex items-center gap-1.5 px-4 py-3 rounded-2xl rounded-bl-sm"
         style={{ background: "var(--bg-bubble-recv)" }}
@@ -33,7 +32,6 @@ export default function TypingIndicator({ chatId }: TypingIndicatorProps) {
           />
         ))}
       </div>
-      {/* Name label below bubble */}
       <span
         className="text-[11px] mb-1 shrink-0 ml-2 mt-4"
         style={{ color: "var(--text-secondary)" }}

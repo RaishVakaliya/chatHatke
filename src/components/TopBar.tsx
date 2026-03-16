@@ -62,22 +62,18 @@ export default function TopBar() {
     let convexDeleted = false;
 
     try {
-      // 1. Try to delete from Convex first
       await deleteUserFromConvex();
       convexDeleted = true;
     } catch (error) {
       console.error("Error deleting account from Convex:", error);
-      // We'll continue with Clerk deletion even if Convex deletion fails
     }
 
     try {
-      // 2. Always attempt to delete from Clerk
       if (user) {
         await user.delete();
         toast.success("Account deleted successfully. Redirecting...", {
           duration: 3000,
         });
-        // Delay redirect to allow toast to be seen
         setTimeout(() => {
           window.location.href = "/";
         }, 2000);
@@ -87,14 +83,12 @@ export default function TopBar() {
     } catch (error: any) {
       console.error("Error deleting account from Clerk:", error);
 
-      // Handle the error based on whether Convex deletion succeeded
       if (convexDeleted) {
         toast.error(
           "Database record removed, but couldn't delete authentication data. Please contact support.",
           { duration: 5000 },
         );
       } else {
-        // Specific check for Clerk re-verification error
         if (error.message?.includes("additional verification")) {
           toast.error(
             "Sensitive action: Please sign out and sign in again to verify your identity before deleting.",
@@ -116,7 +110,6 @@ export default function TopBar() {
         background: "var(--bg-primary)",
       }}
     >
-      {/* App Logo+Name */}
       <div className="flex items-center gap-2.5 select-none cursor-pointer">
         <Image
           src="/app_logo.png"
@@ -134,7 +127,6 @@ export default function TopBar() {
         </span>
       </div>
 
-      {/* Right side icons */}
       <div className="flex items-center gap-1">
         <div className="relative">
           <button className="relative w-8 h-8 flex items-center justify-center rounded-full text-[var(--text-secondary)] hover:bg-[var(--active-chat)] transition-colors">
@@ -154,7 +146,6 @@ export default function TopBar() {
           {dark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
         </button>
 
-        {/* profile avatar */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button className="w-8 h-8 rounded-full select-none overflow-hidden flex items-center justify-center bg-zinc-700 text-xs font-semibold text-white shrink-0 ml-1">
@@ -201,7 +192,6 @@ export default function TopBar() {
                 </div>
               </div>
 
-              {/* Delete Icon with vertical line */}
               <div className="flex items-center gap-2 pl-3 border-l border-zinc-800">
                 <AlertDialog>
                   <AlertDialogTrigger asChild>

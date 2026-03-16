@@ -12,10 +12,8 @@ export default function PresenceTracker() {
   useEffect(() => {
     if (!isSignedIn) return;
 
-    // Initial update
     updatePresence();
 
-    // every 30 seconds
     const interval = setInterval(() => {
       updatePresence();
     }, 30000);
