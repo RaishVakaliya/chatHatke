@@ -123,10 +123,11 @@ export default function MessageList({ chatId }: MessageListProps) {
         {messages?.map(
           (
             msg: {
-              _id: string;
+              _id: Id<"messages">;
               body: string;
               isOwn: boolean;
               createdAt: number;
+              reactions?: { userId: Id<"users">; emoji: string }[];
             },
             index: number,
           ) => {
@@ -138,11 +139,13 @@ export default function MessageList({ chatId }: MessageListProps) {
             return (
               <div key={msg._id}>
                 {showSeparator && <DateSeparator label={thisLabel} />}
-                <div className="mb-1">
+                <div className="mb-2">
                   <MessageBubble
+                    messageId={msg._id}
                     body={msg.body}
                     isOwn={msg.isOwn}
                     createdAt={msg.createdAt}
+                    reactions={msg.reactions}
                   />
                 </div>
               </div>
