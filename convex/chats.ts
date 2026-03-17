@@ -9,11 +9,9 @@ export const getOrCreatechat = mutation({
     const me = await getCurrentUser(ctx);
     if (!me) throw new Error("Unauthorized");
 
-    // Canonical ordering so we always find the same row
     const ids: [Id<"users">, Id<"users">] =
       me._id < otherUserId ? [me._id, otherUserId] : [otherUserId, me._id];
 
-    // Look for existing chat
     const all = await ctx.db.query("chats").collect();
     const existing = all.find(
       (c) =>
@@ -44,13 +42,11 @@ export const listMychats = query({
     const mine = all.filter((c) => c.participantIds.includes(myId));
 
     const now = Date.now();
-    // Hydrate and calculate unread counts
     const result = await Promise.all(
       mine.map(async (chat) => {
         const otherId = chat.participantIds.find((id) => id !== myId)!;
         const other = await ctx.db.get(otherId);
 
-        // Get unread count
         const lastRead = chat.lastReadTimes?.[myId] ?? 0;
         const unreads = await ctx.db
           .query("messages")
@@ -71,7 +67,6 @@ export const listMychats = query({
       }),
     );
 
-    // Sort by most recent message
     return result.sort(
       (a, b) => (b.lastMessageTime ?? 0) - (a.lastMessageTime ?? 0),
     );
@@ -145,7 +140,6 @@ export const sendMessage = mutation({
       createdAt: now,
     });
 
-    // Update chat's last message & time, and update sender's read time
     const chat = await ctx.db.get(chatId);
     if (chat) {
       const lastReadTimes = { ...(chat.lastReadTimes ?? {}) };
@@ -177,5 +171,31 @@ export const getMessages = query({
       ...msg,
       isOwn: msg.senderId === myId,
     }));
+  },
+});
+
+export const toggleReaction = mutation({
+  args: { messageId: v.id("messages"), emoji: v.string() },
+  handler: async (ctx, { messageId, emoji }) => {
+    const me = await getCurrentUser(ctx);
+    if (!me) throw new Error("Unauthorized");
+
+    const message = await ctx.db.get(messageId);
+    if (!message) return;
+
+    const reactions = message.reactions ? [...message.reactions] : [];
+    const existingIndex = reactions.findIndex((r) => r.userId === me._id);
+
+    if (existingIndex >= 0) {
+      if (reactions[existingIndex].emoji === emoji) {
+        reactions.splice(existingIndex, 1);
+      } else {
+        reactions[existingIndex].emoji = emoji;
+      }
+    } else {
+      reactions.push({ userId: me._id, emoji });
+    }
+
+    await ctx.db.patch(messageId, { reactions });
   },
 });

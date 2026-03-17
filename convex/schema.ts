@@ -24,6 +24,14 @@ export default defineSchema({
     senderId: v.id("users"),
     body: v.string(),
     createdAt: v.number(),
+    reactions: v.optional(
+      v.array(
+        v.object({
+          userId: v.id("users"),
+          emoji: v.string(),
+        }),
+      ),
+    ),
   }).index("by_chat", ["chatId", "createdAt"]),
 
   typing: defineTable({
