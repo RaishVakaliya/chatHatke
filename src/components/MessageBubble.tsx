@@ -1,6 +1,6 @@
 "use client";
 
-import { Check } from "lucide-react";
+import { Check, Smile } from "lucide-react";
 
 interface MessageBubbleProps {
   body: string;
@@ -23,7 +23,15 @@ export default function MessageBubble({
   const time = formatTime(createdAt);
 
   return (
-    <div className={`flex ${isOwn ? "justify-end" : "justify-start"}`}>
+    <div
+      className={`flex ${isOwn ? "justify-end" : "justify-start"} group items-center gap-2`}
+    >
+      {isOwn && (
+        <button className="opacity-0 group-hover:opacity-100 transition-all p-1.5 rounded-full hover:bg-[var(--active-chat)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] cursor-pointer">
+          <Smile className="w-4 h-4" />
+        </button>
+      )}
+
       <div
         className={`relative px-3.5 py-2 rounded-2xl max-w-[75%] ${
           isOwn ? "rounded-br-sm" : "rounded-bl-sm"
@@ -55,6 +63,12 @@ export default function MessageBubble({
           )}
         </span>
       </div>
+
+      {!isOwn && (
+        <button className="opacity-0 group-hover:opacity-100 transition-all p-1.5 rounded-full hover:bg-[var(--active-chat)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] cursor-pointer">
+          <Smile className="w-4 h-4" />
+        </button>
+      )}
     </div>
   );
 }

@@ -6,7 +6,8 @@ import { api } from "../../convex/_generated/api";
 import { Id } from "../../convex/_generated/dataModel";
 import { Smile, Paperclip, Send } from "lucide-react";
 import { useTyping } from "@/hooks/useTyping";
-import { EMOJIS } from "@/constant/emoji";
+
+import EmojiPicker from "./EmojiPicker";
 
 interface ChatInputProps {
   chatId: Id<"chats">;
@@ -70,24 +71,13 @@ export default function ChatInput({ chatId }: ChatInputProps) {
       {showEmojis && (
         <div
           ref={emojiRef}
-          className="absolute bottom-full mb-2 left-4 right-4 rounded-2xl shadow-2xl p-3 z-50 animate-in fade-in slide-in-from-bottom-2 duration-200"
+          className="absolute bottom-full mb-4 left-2 right-2 sm:left-auto sm:right-4 w-[calc(100vw-1rem)] sm:w-[350px] max-h-[450px] rounded-2xl shadow-2xl overflow-hidden z-[100] animate-in fade-in slide-in-from-bottom-2 duration-300 transform-gpu"
           style={{
             background: "var(--bg-sidebar)",
             border: "1px solid var(--border)",
           }}
         >
-          <div className="grid grid-cols-10 gap-0.5 max-h-48 overflow-y-auto custom-scroll">
-            {EMOJIS.map((emoji) => (
-              <button
-                key={emoji}
-                onClick={() => insertEmoji(emoji)}
-                className="text-xl w-9 h-9 flex items-center justify-center rounded-lg transition-transform hover:bg-(--active-chat)"
-                title={emoji}
-              >
-                {emoji}
-              </button>
-            ))}
-          </div>
+          <EmojiPicker onEmojiSelect={insertEmoji} />
         </div>
       )}
 
