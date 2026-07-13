@@ -3,6 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import ConvexClientProvider from "@/providers/ConvexProviderWithClerk";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -105,6 +107,8 @@ export default function RootLayout({
             <Toaster position="bottom-right" richColors theme="dark" />
             <PresenceTracker />
             {children}
+            <Analytics />
+            <SpeedInsights />
           </ConvexClientProvider>
         </ClerkProvider>
       </body>
